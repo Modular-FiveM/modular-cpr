@@ -20,7 +20,6 @@ local carry = {
 local cpr = {
     dict = "mini@cpr@char_a@cpr_str",
     name = "cpr_pumpchest",
-    Cooldown = Config.CPRCooldown,
     tries = Config.Tries,
     isTrying = false
 }
@@ -29,12 +28,14 @@ CreateThread(function()
     exports.ox_target:addGlobalPlayer({
         {
             label = 'Bær på skulderen',
-            icon = 'fa-solid fa-stethoscope',
+            icon = 'fa-solid fa-handshake-angle',
             distance = 2,
             canInteract = function(entity)
                 if carry.InProgress then
                     return false
                 elseif carry.type == "beingcarried" then
+                    return false
+                elseif IsPedFatallyInjured(PlayerPedId()) then
                     return false
                 end
 
@@ -141,18 +142,22 @@ function CPR(entity)
     cpr.tries -= 1
 
     if chance == 1 then
-        lib.notify({ title = 'CPR was good', type = 'success' })
-        lib.callback.await('modular-cpr:reviveplayer', false, GetPlayerServerId(NetworkGetEntityOwner(entity)))
+        notifyPreset('Du har reddet personen!', 'success')
+        TriggerServerEvent('modular-cpr:reviveplayer', GetPlayerServerId(NetworkGetEntityOwner(entity)))
     else
-        lib.notify({ title = 'CPR Failed', description = '(' .. cpr.tries .. '/3 forsøg tilbage)', type = 'error' })
+        notifyPreset('(' .. cpr.tries .. '/' .. Config.Tries .. ' forsøg tilbage)', 'error')
     end
 
     cpr.isTrying = false
 
     if cpr.tries <= 0 then
-        lib.notify({ title = 'Du skal vente 6 sekunder før du kan igen', type = 'info' })
-        Wait(cpr.Cooldown * 1000)
-        cpr.tries = 3
-        lib.notify({ title = 'Du kan udøve CPR igen', type = 'success' })
+        notifyPreset('Du kan udøve CPR igen om ' .. Config.CPRCooldown .. ' sekunder', 'info')
+        Wait(Config.CPRCooldown * 1000)
+        cpr.tries = Config.Tries
+        notifyPreset('Du kan udøve CPR igen', 'success')
     end
+end
+
+function notifyPreset(text, _type)
+    lib.notify({ description = text, type = _type, position = 'top' })
 end

@@ -6,7 +6,8 @@ RegisterServerEvent("CarryPeople:sync", function(targetSrc)
 	local sourcePed = GetPlayerPed(source)
    	local sourceCoords = GetEntityCoords(sourcePed)
 	local targetPed = GetPlayerPed(targetSrc)
-        local targetCoords = GetEntityCoords(targetPed)
+    local targetCoords = GetEntityCoords(targetPed)
+    
 	if #(sourceCoords - targetCoords) <= 3.0 then 
 		TriggerClientEvent("CarryPeople:syncTarget", targetSrc, source)
 		carrying[source] = targetSrc
@@ -44,6 +45,6 @@ AddEventHandler('playerDropped', function(reason)
 	end
 end)
 
-lib.callback.register('modular-cpr:reviveplayer', function(src, pSource)
-    revivePlayer(pSource)
+RegisterNetEvent('modular-cpr:reviveplayer', function(target)
+    revivePlayer(target)
 end)
