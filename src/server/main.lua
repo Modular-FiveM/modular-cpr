@@ -6,9 +6,9 @@ RegisterServerEvent("CarryPeople:sync", function(targetSrc)
 	local sourcePed = GetPlayerPed(source)
    	local sourceCoords = GetEntityCoords(sourcePed)
 	local targetPed = GetPlayerPed(targetSrc)
-    local targetCoords = GetEntityCoords(targetPed)
+   	local targetCoords = GetEntityCoords(targetPed)
     
-	if #(sourceCoords - targetCoords) <= 3.0 then 
+	if #(sourceCoords - targetCoords) <= 4.5 then 
 		TriggerClientEvent("CarryPeople:syncTarget", targetSrc, source)
 		carrying[source] = targetSrc
 		carried[targetSrc] = source
