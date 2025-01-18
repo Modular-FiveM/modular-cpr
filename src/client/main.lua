@@ -161,3 +161,14 @@ end
 function notifyPreset(text, _type)
     lib.notify({ description = text, type = _type, position = 'top' })
 end
+
+
+RegisterNetEvent('reviveTarget:modular-cpr', function()
+    local ped = PlayerPedId()
+    SetEntityHealth(ped, 200)
+     
+    for i = 1, 3 do -- vRP's bullshit skal bruge et par ekstra gange, for at revive nogen gange... #vRPErLort
+        Wait(50)
+        SetEntityHealth(ped, 200)
+    end
+end)
